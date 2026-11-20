@@ -1,6 +1,6 @@
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function calcularEdad(fechaNacimiento) {
+export function calcularEdad(fechaNacimiento) {
   const nacimiento = new Date(fechaNacimiento + 'T00:00:00');
   if (Number.isNaN(nacimiento.getTime())) return null;
 

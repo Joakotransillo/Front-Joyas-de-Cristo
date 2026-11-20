@@ -20,3 +20,17 @@ export async function solicitarCuenta(datosSolicitud) {
   const { data } = await api.post('/auth/solicitar-cuenta', datosSolicitud);
   return data;
 }
+export async function obtenerPerfil() {
+  const { data } = await api.get('/auth/me');
+  return data.usuario;
+}
+
+export async function actualizarPerfil(datosPerfil) {
+  const { data } = await api.patch('/auth/me', datosPerfil);
+  return data;
+}
+
+export async function cambiarContrasena(datosPassword) {
+  const { data } = await api.patch('/auth/me', datosPassword);
+  return data;
+}

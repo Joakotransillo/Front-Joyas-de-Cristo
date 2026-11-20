@@ -1,7 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import ProfilePage from '../pages/ProfilePage';
+import MedalleroPage from '../pages/MedalleroPage';
 import DashboardPage from '../pages/DashboardPage';
+import CuadernilloPage from '../pages/CuadernilloPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -14,9 +17,16 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/solicitar-cuenta" element={<RegisterPage />} />
 
-      {/* Las vistas privadas validan la sesión y el rol contra el backend. */}
+      {/* Vistas privadas: sesión y rol validados contra el backend. */}
       <Route element={<ProtectedRoute rolesPermitidos={ROLES_PLATAFORMA} />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/perfil" element={<ProfilePage />} />
+        <Route path="/medallero" element={<MedalleroPage />} />
+      </Route>
+
+      {/* Cuadernillo privado para conquistadores. */}
+      <Route element={<ProtectedRoute rolesPermitidos={['CONQUISTADOR']} />}>
+        <Route path="/cuadernillo" element={<CuadernilloPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
 

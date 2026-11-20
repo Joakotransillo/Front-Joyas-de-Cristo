@@ -1,0 +1,480 @@
+/* Login: paisaje de campamento arriba (celular) o a la izquierda (computadora) y formulario. */
+.lg {
+  --lg-pino: #1F5A43;
+  --lg-pino-oscuro: #17463A;
+  --lg-salvia: #E3ECE5;
+  --lg-arena: #F3EFE4;
+  --lg-fogata: #D9792B;
+  --lg-tinta: #1C2420;
+  --lg-gris: #5E6963;
+  --lg-borde: #D6DCD7;
+  --lg-fondo: #FAFAF7;
+  --lg-error: #B4472F;
+  --lg-escena-tinta: #1F3F30;
+  --lg-escena-suave: #4C5E52;
+  --lg-escena-chip: rgba(255, 255, 255, 0.62);
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--lg-fondo);
+  color: var(--lg-tinta);
+  font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.lg[data-momento='atardecer'] {
+  --lg-escena-tinta: #4A2614;
+  --lg-escena-suave: #6E3E22;
+  --lg-escena-chip: rgba(255, 246, 232, 0.6);
+}
+
+.lg[data-momento='noche'] {
+  --lg-escena-tinta: #F4EFE4;
+  --lg-escena-suave: #B9C3D3;
+  --lg-escena-chip: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Paisaje ---------- */
+.lg-scene {
+  position: relative;
+  flex: none;
+  height: 250px;
+  overflow: hidden;
+}
+
+.lg-scene .camp-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.lg-intro {
+  display: none;
+}
+
+.lg-badge {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: -52px;
+}
+
+.lg-badge img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 5px solid var(--lg-fondo);
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(20, 40, 30, 0.2);
+}
+
+/* ---------- Formulario ---------- */
+.lg-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 8px 20px 32px;
+}
+
+.lg-panel__inner {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lg-heading {
+  text-align: center;
+}
+
+.lg-heading h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.lg-heading__lema {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--lg-gris);
+}
+
+.lg-heading__sub {
+  display: none;
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: var(--lg-gris);
+}
+
+.lg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lg-field label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.lg-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 6px 0 14px;
+  background: #fff;
+  border: 1.5px solid var(--lg-borde);
+  border-radius: 12px;
+  color: #8A938D;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.lg-input:focus-within {
+  border-color: var(--lg-pino);
+  box-shadow: 0 0 0 4px rgba(31, 90, 67, 0.14);
+  color: var(--lg-pino);
+}
+
+.lg-input.has-error {
+  border-color: var(--lg-error);
+}
+
+.lg-input input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 16px;
+  color: var(--lg-tinta);
+}
+
+.lg-input input::placeholder {
+  color: #9AA29D;
+}
+
+.lg-input__toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--lg-gris);
+  cursor: pointer;
+}
+
+.lg-input__toggle:hover {
+  background: var(--lg-salvia);
+}
+
+.lg-input__toggle:focus-visible,
+.lg-link:focus-visible,
+.lg-submit:focus-visible,
+.lg-register a:focus-visible {
+  outline: 3px solid rgba(31, 90, 67, 0.4);
+  outline-offset: 2px;
+}
+
+.lg-field__error {
+  margin: 0;
+  font-size: 14px;
+  color: var(--lg-error);
+}
+
+.lg-field__caps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  color: #8A5A12;
+}
+
+.lg-form__options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+  font-size: 15px;
+}
+
+.lg-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.lg-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--lg-pino);
+}
+
+.lg-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--lg-pino);
+  cursor: pointer;
+}
+
+.lg-link:hover {
+  text-decoration: underline;
+}
+
+.lg-help {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--lg-arena);
+  font-size: 15px;
+  color: #5A4A30;
+}
+
+.lg-alert {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #FBEAE5;
+  color: #8E3420;
+}
+
+.lg-alert svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.lg-alert p {
+  margin: 0;
+  font-size: 15px;
+}
+
+.lg-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--lg-pino);
+  color: #fff;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.lg-submit:hover:not(:disabled) {
+  background: var(--lg-pino-oscuro);
+}
+
+.lg-submit:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.lg-submit:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.lg-submit__spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: lg-spin 0.8s linear infinite;
+}
+
+@keyframes lg-spin {
+  to { transform: rotate(360deg); }
+}
+
+.lg-register {
+  margin: 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--lg-gris);
+}
+
+.lg-register a {
+  font-weight: 600;
+  color: var(--lg-pino);
+  text-decoration: none;
+}
+
+.lg-register a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Computadora: pantalla dividida ---------- */
+@media (min-width: 900px) {
+  .lg {
+    flex-direction: row;
+  }
+
+  .lg-scene {
+    flex: 1.1;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .lg-badge {
+    display: none;
+  }
+
+  .lg-intro {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 48px 52px;
+    color: var(--lg-escena-tinta);
+  }
+
+  .lg-intro__brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .lg-intro__brand img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(20, 40, 30, 0.18);
+  }
+
+  .lg-intro__brand p {
+    margin: 0;
+    font-size: 16px;
+    color: var(--lg-escena-suave);
+  }
+
+  .lg-intro__brand h2 {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .lg-intro__lema {
+    margin: 12px 0 0;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--lg-escena-suave);
+  }
+
+  .lg-intro__list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lg-intro__list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: var(--lg-escena-chip);
+    font-size: 16px;
+    backdrop-filter: blur(2px);
+  }
+
+  .lg-panel {
+    flex: 1;
+    align-items: center;
+    padding: 48px 56px;
+  }
+
+  .lg-panel__inner {
+    max-width: 420px;
+  }
+
+  .lg-heading {
+    text-align: left;
+  }
+
+  .lg-heading h1 {
+    font-size: 32px;
+  }
+
+  .lg-heading__lema {
+    display: none;
+  }
+
+  .lg-heading__sub {
+    display: block;
+  }
+
+  .lg-register {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-submit__spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* Aviso de cielo forzado con ?cielo= (solo aparece mientras desarrollamos). */
+.lg-preview {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 32px);
+  padding: 10px 12px 10px 16px;
+  border-radius: 999px;
+  background: #1C2420;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%);
+}
+
+.lg-preview a {
+  flex: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #F3EFE4;
+  color: #1C2420;
+  font-weight: 500;
+  text-decoration: none;
+}

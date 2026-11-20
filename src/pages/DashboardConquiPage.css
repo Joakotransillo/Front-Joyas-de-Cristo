@@ -1,0 +1,146 @@
+.conqui-dashboard.profile-page {
+  background: radial-gradient(circle at 14px 14px, rgba(169, 145, 93, .1) 0 1px, transparent 1.7px), linear-gradient(145deg, #f8f4e8, #eee7d4);
+  background-size: 16px 16px, auto;
+}
+.conqui-dashboard__shell { width: min(100%, 1180px); }
+.conqui-hero {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(270px, .85fr);
+  align-items: center; gap: clamp(22px, 4vw, 52px); min-height: 300px; overflow: hidden; isolation: isolate;
+  padding: clamp(25px, 4vw, 42px); border: 1px solid rgba(220, 194, 121, .34); border-radius: 19px;
+  background: radial-gradient(circle at 81% 23%, rgba(237, 214, 148, .12) 0 1px, transparent 2px), radial-gradient(circle at 56% 17%, rgba(237, 214, 148, .15) 0 1.5px, transparent 2.5px), linear-gradient(125deg, #0a2530, #123735 58%, #194331);
+  box-shadow: 0 18px 35px rgba(37, 47, 35, .16);
+}
+.conqui-hero::before { position: absolute; z-index: -1; inset: 0; content: ""; opacity: .25; background: repeating-radial-gradient(ellipse at 88% 60%, transparent 0 33px, rgba(220, 205, 151, .25) 34px 35px, transparent 36px 66px); pointer-events: none; }
+.conqui-hero__identity { position: relative; z-index: 2; display: flex; align-items: center; gap: 22px; }
+.conqui-avatar { position: relative; display: grid; width: 102px; height: 102px; flex: 0 0 auto; place-items: center; border: 3px dashed #d4ad4e; border-radius: 50%; background: radial-gradient(circle, #f3e8c7 0 62%, #173e32 63%); color: #15372d; box-shadow: 0 0 0 7px rgba(227, 198, 125, .13), 0 10px 22px rgba(0,0,0,.2); font-family: Georgia, serif; font-size: 27px; font-weight: 800; letter-spacing: .08em; }
+.conqui-avatar > span { position: absolute; right: -5px; bottom: -1px; display: grid; width: 29px; height: 29px; place-items: center; border: 2px solid #17392f; border-radius: 50%; background: #efbb4f; color: #4c3418; }
+.conqui-hero__copy { min-width: 0; color: #f5f0dc; }
+.conqui-eyebrow { display: inline-flex; align-items: center; gap: 7px; color: #e6ce92; font-family: Georgia, serif; font-size: 9px; font-weight: 700; letter-spacing: .15em; }
+.conqui-hero__copy h1 { margin: 11px 0 4px; color: #fff6e2; font-family: "Arial Narrow", "Franklin Gothic Medium", "Segoe UI", sans-serif; font-size: clamp(31px, 4vw, 46px); font-weight: 800; line-height: 1.05; }
+.conqui-hero__copy > p { margin: 0; color: #c7d0be; font-size: 13px; line-height: 1.6; }
+.conqui-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.conqui-tags > span { display: inline-flex; min-height: 31px; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid rgba(223,193,111,.45); border-radius: 6px; background: rgba(8,30,29,.52); color: #f2d780; font-family: Georgia, serif; font-size: 9px; font-weight: 700; letter-spacing: .08em; }
+.conqui-tags > span + span { border-color: rgba(200,212,197,.25); color: #d8dfd2; }
+.conqui-progress-card { position: relative; z-index: 2; padding: 20px; border: 1px solid rgba(221,192,111,.5); border-radius: 13px; background: rgba(242,235,208,.12); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); color: #f7f0dc; backdrop-filter: blur(4px); }
+.conqui-progress-card__top { display: flex; align-items: center; gap: 11px; }
+.conqui-progress-card__top > div { display: grid; gap: 4px; }
+.conqui-progress-card__top > div > span { color: #e4d6ad; font-family: Georgia, serif; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.conqui-progress-card__top strong { color: #fff4d9; font-size: 15px; }
+.conqui-progress-card__seal { display: grid; width: 37px; height: 37px; flex: 0 0 auto; place-items: center; border: 1px solid #d4ac4d; border-radius: 10px; background: #df772b; color: #fff4d2; }
+.conqui-progress-card__number { display: flex; align-items: baseline; gap: 9px; margin: 20px 0 12px; }
+.conqui-progress-card__number strong { color: #fff3d4; font-family: "Arial Narrow", "Franklin Gothic Medium", "Segoe UI", sans-serif; font-size: 39px; line-height: 1; }
+.conqui-progress-card__number span { color: #d8d7c3; font-size: 11px; }
+.conqui-progress-track { height: 13px; overflow: hidden; border: 1px solid rgba(234,210,149,.26); border-radius: 999px; background: rgba(4,22,22,.62); box-shadow: inset 0 2px 4px rgba(0,0,0,.27); }
+.conqui-progress-track > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#e77423,#f3bb53); box-shadow: 0 0 14px rgba(245,153,54,.42); transition: width .35s ease; }
+.conqui-progress-card__footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 9px; color: #e7dfc5; font-family: Georgia, serif; font-size: 10px; }
+.conqui-hero__landscape { position: absolute; z-index: 1; right: 0; bottom: 0; left: 0; width: 100%; height: 116px; pointer-events: none; }
+.conqui-highlights { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; margin-top: 15px; }
+.conqui-highlight { display: flex; min-width: 0; align-items: center; gap: 12px; padding: 15px 16px; border: 1px solid #ded4bd; border-radius: 11px; background: rgba(255,253,246,.8); box-shadow: 0 5px 14px rgba(57,48,32,.04); }
+.conqui-highlight__icon { display: grid; width: 39px; height: 39px; flex: 0 0 auto; place-items: center; border-radius: 10px; background: #1d4b39; color: #ead078; }
+.conqui-highlight__icon--gold { background: #5b3d28; color: #f0bd50; }
+.conqui-highlight__icon--light { background: #e8e0ca; color: #355a44; }
+.conqui-highlight > div { display: grid; min-width: 0; gap: 4px; }
+.conqui-highlight small { color: #8b8068; font-family: Georgia,serif; font-size: 8px; font-weight: 700; letter-spacing: .14em; }
+.conqui-highlight strong { overflow: hidden; color: #304637; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.conqui-panels { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(280px,.75fr); align-items: start; gap: 16px; margin-top: 18px; }
+.conqui-panel { min-width: 0; padding: 20px; border: 1px solid #d8ccb1; border-radius: 13px; background: rgba(255,252,241,.88); box-shadow: 0 9px 22px rgba(50,47,35,.06); }
+.conqui-panel--notices { border-top: 4px solid #61422c; }
+.conqui-panel--events { border-top: 4px solid #d78b31; }
+.conqui-panel__heading { display: flex; align-items: center; gap: 11px; padding-bottom: 15px; border-bottom: 1px solid #e5dcc7; }
+.conqui-panel__heading > div { min-width: 0; }
+.conqui-panel__emblem { display: grid; width: 39px; height: 39px; flex: 0 0 auto; place-items: center; border-radius: 10px; background: #62422c; color: #f2a13d; }
+.conqui-panel__emblem--gold { background: #f1e5c7; color: #9a6027; }
+.conqui-eyebrow--paper { color: #9a8354; font-size: 8px; }
+.conqui-panel__heading h2 { margin: 3px 0 0; color: #273e31; font-family: "Arial Narrow","Franklin Gothic Medium","Segoe UI",sans-serif; font-size: 20px; font-weight: 800; line-height: 1.2; }
+.conqui-count { display: grid; width: 29px; height: 29px; flex: 0 0 auto; place-items: center; margin-left: auto; border-radius: 50%; background: #efe5ce; color: #5b452c; font-family: Georgia,serif; font-size: 11px; font-weight: 700; }
+.conqui-notice-list,.conqui-event-list { display: grid; gap: 10px; padding-top: 14px; }
+.conqui-notice { position: relative; padding: 14px 14px 13px 18px; border: 1px solid #e5dcc7; border-radius: 9px; background: #fffdf6; }
+.conqui-notice__pin { position: absolute; top: -5px; left: 20px; width: 11px; height: 11px; border: 2px solid #fffdf6; border-radius: 50%; background: #b83428; box-shadow: 0 1px 3px rgba(50,30,15,.3); }
+.conqui-notice__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.conqui-notice h3,.conqui-event h3 { margin: 0; color: #304535; font-size: 13px; font-weight: 800; line-height: 1.45; }
+.conqui-notice__head > span { flex: 0 0 auto; color: #8b806c; font-family: Georgia,serif; font-size: 9px; }
+.conqui-notice > p { margin: 8px 0 9px; color: #595a50; font-size: 12px; line-height: 1.6; white-space: pre-wrap; }
+.conqui-notice > small { color: #877d68; font-family: Georgia,serif; font-size: 10px; }
+.conqui-event { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #ded4be; }
+.conqui-event:last-child { border-bottom: 0; }
+.conqui-event__icon { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border: 1px solid #e3c06d; border-radius: 8px; background: #f5e9cb; color: #995a21; }
+.conqui-event__copy { min-width: 0; }
+.conqui-event__copy h3 { margin-bottom: 5px; }
+.conqui-event__copy p { display: flex; align-items: flex-start; gap: 5px; margin: 4px 0; color: #77715f; font-size: 10px; line-height: 1.5; }
+.conqui-event__copy p svg { flex: 0 0 auto; margin-top: 1px; color: #9d7a3d; }
+.conqui-event__copy small { display: block; margin-top: 7px; color: #77715f; font-size: 10px; line-height: 1.5; }
+.conqui-empty { display: flex; align-items: flex-start; gap: 11px; padding: 20px 3px 5px; }
+.conqui-empty > span { display: grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; border: 1px dashed #c8ae6d; border-radius: 50%; color: #997538; }
+.conqui-empty strong { color: #405344; font-family: Georgia,serif; font-size: 12px; }
+.conqui-empty p { margin: 5px 0 0; color: #7b796d; font-size: 10px; line-height: 1.55; }
+.conqui-fullstate { display: grid; min-height: 100vh; place-content: center; justify-items: center; gap: 12px; padding: 24px; background: #f7f2e5; color: #3f614d; text-align: center; }
+.conqui-fullstate p { max-width: 390px; margin: 0; color: #77766d; font-size: 13px; line-height: 1.6; }
+.conqui-fullstate h1 { margin: 0; color: #284736; font-size: 22px; }
+.conqui-fullstate--error > svg { color: #9d6330; }
+.conqui-fullstate button { display: inline-flex; min-height: 42px; align-items: center; gap: 8px; margin-top: 4px; padding: 0 14px; border: 1px solid #b9aa87; border-radius: 8px; background: #fffdf5; color: #31523f; cursor: pointer; font-weight: 700; }
+.conqui-fullstate button:hover { background: #f2ead5; }
+@media (max-width: 950px) { .conqui-hero { grid-template-columns: 1fr; } .conqui-progress-card { max-width: 520px; } .conqui-panels { grid-template-columns: 1fr; } }
+@media (max-width: 680px) {
+  .conqui-dashboard.profile-page { grid-template-columns: 1fr; }
+  .conqui-dashboard .profile-sidebar { position: relative; top: auto; height: auto; min-height: auto; }
+  .conqui-dashboard .profile-sidebar__bottom { margin-top: 24px; }
+  .conqui-highlights { grid-template-columns: 1fr; }
+  .conqui-hero__identity { align-items: flex-start; flex-direction: column; }
+  .conqui-hero__landscape { height: 86px; }
+  .conqui-progress-card,.conqui-panel { padding: 16px; }
+  .conqui-notice__head { flex-direction: column; gap: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .conqui-progress-track > span { transition: none; } }
+
+
+/* Color dinámico por clase */
+.conqui-dashboard.profile-page { --class-color: #d98b38; }
+.conqui-hero {
+  --class-color: #d98b38;
+  background:
+    radial-gradient(circle at 89% 18%, rgba(229, 191, 93, .14), transparent 32%),
+    radial-gradient(circle at 81% 23%, rgba(237, 214, 148, .12) 0 1px, transparent 2px),
+    radial-gradient(circle at 56% 17%, rgba(237, 214, 148, .15) 0 1.5px, transparent 2.5px),
+    linear-gradient(125deg, #0a2530, #123735 58%, #194331);
+}
+.conqui-hero::after {
+  position: absolute;
+  z-index: 0;
+  top: -94px;
+  right: 24%;
+  width: 250px;
+  height: 250px;
+  border: 1px dashed var(--class-color);
+  border-radius: 50%;
+  content: "";
+  opacity: .38;
+  box-shadow: 0 0 0 13px rgba(255,255,255,.025), inset 0 0 0 18px rgba(236,218,165,.035);
+  pointer-events: none;
+}
+.conqui-hero__identity,.conqui-progress-card { position: relative; z-index: 2; }
+.conqui-avatar { border-color: var(--class-color); }
+.conqui-tags > span:first-child { border-color: var(--class-color); }
+.conqui-progress-card {
+  border-color: var(--class-color);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 12px 30px rgba(0,0,0,.14);
+}
+.conqui-progress-card__seal {
+  border-color: var(--class-color);
+  background-color: var(--class-color);
+  background-image: linear-gradient(145deg, rgba(255,255,255,.24), rgba(0,0,0,.14));
+}
+.conqui-progress-track {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), rgba(255,255,255,.16) calc(25% - 1px) 25%),
+    rgba(4,22,22,.62);
+}
+.conqui-progress-track > span {
+  background: var(--class-color);
+  background-image: linear-gradient(90deg, rgba(255,255,255,.36), transparent 75%);
+  box-shadow: 0 0 16px var(--class-color);
+}
+.conqui-highlight:first-child { border-top-color: var(--class-color); }
+.conqui-highlight:first-child .conqui-highlight__icon { background: var(--class-color); color: #fff8e5; }
+@media (max-width: 680px) {
+  .conqui-hero::after { right: -40px; width: 180px; height: 180px; }
+}
