@@ -1,0 +1,37 @@
+.camp-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.camp-scene__flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: camp-scene-flicker 1.6s ease-in-out infinite alternate;
+}
+
+.camp-scene__flame--inner {
+  animation-duration: 1.1s;
+}
+
+.camp-scene__stars circle {
+  animation: camp-scene-twinkle 3.5s ease-in-out infinite;
+}
+
+@keyframes camp-scene-flicker {
+  0% { transform: scale(1, 1); }
+  50% { transform: scale(0.94, 1.06); }
+  100% { transform: scale(1.04, 0.96); }
+}
+
+@keyframes camp-scene-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .camp-scene__flame,
+  .camp-scene__stars circle {
+    animation: none;
+  }
+}
