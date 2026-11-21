@@ -1,0 +1,54 @@
+/* Parche de especialidad: círculo con borde "cosido" (línea punteada) como los parches de tela. */
+.parche {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--tam);
+  height: var(--tam);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--parche) 12%, #fff);
+  color: var(--parche);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--parche) 30%, #fff);
+}
+
+.parche::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1.5px dashed color-mix(in srgb, var(--parche) 45%, transparent);
+  border-radius: 50%;
+}
+
+.parche.is-done {
+  background: var(--parche);
+  color: #fff;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--parche), 0 4px 10px color-mix(in srgb, var(--parche) 35%, transparent);
+}
+
+.parche.is-done::before {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.parche img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.parche__ok {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: calc(var(--tam) * 0.32);
+  height: calc(var(--tam) * 0.32);
+  min-width: 20px;
+  min-height: 20px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--jc-pino, #1F5A43);
+  color: #fff;
+}

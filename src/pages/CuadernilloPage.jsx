@@ -1,39 +1,84 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Award, BookOpen, CalendarDays, CheckCircle2, ClipboardList, Compass,
-  RefreshCw, ShieldCheck, Sparkles
-} from 'lucide-react';
-import ProfileSidebar from '../components/ProfileSidebar';
+import { useEffect, useMemo, useState } from 'react';
+import { BookOpen, Check, ChevronDown, RefreshCw } from 'lucide-react';
+import AppShell from '../components/AppShell';
 import { obtenerPerfil } from '../services/authService';
 import { actualizarLecturaBiblica, obtenerCuadernilloConquistador } from '../services/cuadernilloService';
-import './ProfilePage.css';
+import { colorDeClase } from '../styles/temaClase';
 import './CuadernilloPage.css';
 
-const COLORES_CLASES = Object.freeze({
-  Amigo: '#1E40AF',
-  Compañero: '#DC2626',
-  Explorador: '#166534',
-  Pionero: '#65A30D',
-  Excursionista: '#7C3AED',
-  Guía: '#CA8A04'
-});
-
-function colorParaClase(clase) {
-  const color = clase?.color_insignia;
-  if (typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color)) return color;
-  return COLORES_CLASES[clase?.nombre] || '#D98B38';
-}
-
-function fechaLegible(valor) {
+function fechaCorta(valor) {
   if (!valor) return '';
   const fecha = new Date(typeof valor === 'string' ? valor.replace(' ', 'T') : valor);
   if (Number.isNaN(fecha.getTime())) return '';
-  return new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium' }).format(fecha);
+  return new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }).format(fecha).replace('.', '');
 }
 
-function mensajeError(error) {
-  return error?.response?.data?.mensaje
-    || 'No pudimos cargar tu cuadernillo. Revisá la conexión e intentá de nuevo.';
+// "II. Descubrimiento Espiritual" → { numeral: 'II', nombre: 'Descubrimiento Espiritual' }
+function separarNombre(nombre = '') {
+  const coincide = nombre.match(/^([IVXLC]+)\.\s*(.+)$/);
+  return coincide ? { numeral: coincide[1], nombre: coincide[2] } : { numeral: null, nombre };
+}
+
+const estaFirmado = (requisito) => Boolean(requisito.firmado || requisito.completado);
+
+function contar(requisitos = []) {
+  const firmados = requisitos.filter(estaFirmado).length;
+  return { firmados, total: requisitos.length };
+}
+
+function Requisito({ requisito, lecturas, guardando, error, onLectura }) {
+  const firmado = estaFirmado(requisito);
+  const referencias = Array.isArray(requisito.referencias_lectura) ? requisito.referencias_lectura : [];
+  const leidas = firmado ? referencias : lecturas;
+
+  return (
+    <li className={firmado ? 'cd-req is-done' : 'cd-req'}>
+      <span className="cd-req__num" aria-hidden="true">
+        {firmado ? <Check size={15} strokeWidth={3} /> : requisito.numero_item}
+      </span>
+      <div className="cd-req__body">
+        {referencias.length > 0 ? (
+          <>
+            <p>{requisito.descripcion.split(':')[0]}</p>
+            <div className="cd-reading">
+              <div className="cd-reading__head">
+                <span>{leidas.length} de {referencias.length} leídas</span>
+                <span className="cd-reading__bar" aria-hidden="true">
+                  <span style={{ width: `${(leidas.length / referencias.length) * 100}%` }} />
+                </span>
+              </div>
+              <div className="cd-reading__list" role="group" aria-label={`Lecturas bíblicas del requisito ${requisito.numero_item}`}>
+                {referencias.map((referencia) => {
+                  const marcada = leidas.includes(referencia);
+                  return (
+                    <label key={referencia} className={marcada ? 'cd-chip is-on' : 'cd-chip'}>
+                      <input
+                        type="checkbox"
+                        checked={marcada}
+                        disabled={firmado || guardando}
+                        onChange={(event) => onLectura(requisito.id, referencia, event.target.checked)}
+                      />
+                      {marcada && <Check size={13} strokeWidth={3} aria-hidden="true" />}
+                      {referencia}
+                    </label>
+                  );
+                })}
+              </div>
+              {!firmado && <small className="cd-reading__hint">Marcá cada capítulo cuando lo leas. Se guarda solo.</small>}
+              {error && <p className="cd-reading__error" role="alert">{error}</p>}
+            </div>
+          </>
+        ) : (
+          <p>{requisito.descripcion}</p>
+        )}
+        <small className={firmado ? 'cd-req__state is-done' : 'cd-req__state'}>
+          {firmado
+            ? `Firmado${requisito.fecha_firma ? ' el ' + fechaCorta(requisito.fecha_firma) : ''}`
+            : 'Pendiente · lo firma tu consejero'}
+        </small>
+      </div>
+    </li>
+  );
 }
 
 export default function CuadernilloPage() {
@@ -42,12 +87,11 @@ export default function CuadernilloPage() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
   const [intento, setIntento] = useState(0);
-  const [lecturasPorRequisito, setLecturasPorRequisito] = useState({});
-  const [lecturasGuardando, setLecturasGuardando] = useState({});
+  const [tipo, setTipo] = useState('REGULAR');
+  const [areaAbierta, setAreaAbierta] = useState(undefined);
+  const [lecturas, setLecturas] = useState({});
+  const [guardando, setGuardando] = useState({});
   const [erroresLectura, setErroresLectura] = useState({});
-  const [tipoSeleccionado, setTipoSeleccionado] = useState('REGULAR');
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
-  const referenciasPestanas = useRef([]);
 
   useEffect(() => {
     let activo = true;
@@ -59,279 +103,228 @@ export default function CuadernilloPage() {
         if (!activo) return;
         setDatos(cuadernillo);
         setPerfil(usuario);
-        const lecturasIniciales = {};
-        for (const cuadernilloCargado of cuadernillo.cuadernillos || []) {
-          for (const categoria of cuadernilloCargado.categorias || []) {
+        const iniciales = {};
+        for (const libro of cuadernillo.cuadernillos || []) {
+          for (const categoria of libro.categorias || []) {
             for (const requisito of categoria.requisitos || []) {
-              lecturasIniciales[requisito.id] = Array.isArray(requisito.lecturas_completadas)
-                ? requisito.lecturas_completadas
-                : [];
+              iniciales[requisito.id] = Array.isArray(requisito.lecturas_completadas) ? requisito.lecturas_completadas : [];
             }
           }
         }
-        setLecturasPorRequisito(lecturasIniciales);
+        setLecturas(iniciales);
         setErroresLectura({});
       })
       .catch((fallo) => {
-        if (activo) setError(mensajeError(fallo));
+        if (activo) setError(fallo?.response?.data?.mensaje || 'No pudimos cargar tu cuadernillo. Revisá la conexión e intentá de nuevo.');
       })
-      .finally(() => {
-        if (activo) setCargando(false);
-      });
+      .finally(() => { if (activo) setCargando(false); });
 
     return () => { activo = false; };
   }, [intento]);
 
   const cuadernillos = Array.isArray(datos?.cuadernillos) ? datos.cuadernillos : [];
-  const cuadernilloActivo = cuadernillos.find((item) => item.tipo === tipoSeleccionado)
-    || cuadernillos[0]
-    || null;
-  const categorias = Array.isArray(cuadernilloActivo?.categorias) ? cuadernilloActivo.categorias : [];
-  const categoriaActiva = categorias.find((item) => item.id === categoriaSeleccionada) || categorias[0] || null;
+  const libro = cuadernillos.find((item) => item.tipo === tipo) || cuadernillos[0] || null;
+  const areas = Array.isArray(libro?.categorias) ? libro.categorias : [];
 
-  const resumen = useMemo(() => {
-    const requisitos = cuadernillos.flatMap((cuadernillo) => (
-      Array.isArray(cuadernillo.categorias)
-        ? cuadernillo.categorias.flatMap((categoria) => categoria.requisitos || [])
-        : []
-    ));
-    const aprobados = requisitos.filter((requisito) => requisito.firmado || requisito.completado).length;
-    return {
-      total: requisitos.length,
-      aprobados,
-      porcentaje: requisitos.length ? Math.round((aprobados / requisitos.length) * 100) : 0
-    };
-  }, [cuadernillos]);
+  // Al abrir, se despliega la primera área con requisitos pendientes.
+  const areaInicial = useMemo(() => {
+    const pendiente = areas.find((area) => (area.requisitos || []).some((requisito) => !estaFirmado(requisito)));
+    return (pendiente || areas[0])?.id ?? null;
+  }, [areas]);
+  const areaActiva = areaAbierta === undefined ? areaInicial : areaAbierta;
+  const areaSeleccionada = areas.find((area) => area.id === areaActiva) || null;
 
-  const actualizarLectura = async (requisitoId, referencia, completado) => {
-    const anteriores = lecturasPorRequisito[requisitoId] || [];
-    const actualizadas = new Set(anteriores);
-    if (completado) actualizadas.add(referencia);
-    else actualizadas.delete(referencia);
+  const resumen = contar(areas.flatMap((area) => area.requisitos || []));
+  const porcentaje = resumen.total ? Math.round((resumen.firmados / resumen.total) * 100) : 0;
+
+  const cambiarTipo = (nuevo) => {
+    setTipo(nuevo);
+    setAreaAbierta(undefined);
+  };
+
+  const marcarLectura = async (requisitoId, referencia, leida) => {
+    const anteriores = lecturas[requisitoId] || [];
+    const siguientes = new Set(anteriores);
+    if (leida) siguientes.add(referencia);
+    else siguientes.delete(referencia);
 
     setErroresLectura((actuales) => ({ ...actuales, [requisitoId]: '' }));
-    setLecturasPorRequisito((actuales) => ({ ...actuales, [requisitoId]: [...actualizadas] }));
-    setLecturasGuardando((actuales) => ({ ...actuales, [requisitoId]: true }));
-
+    setLecturas((actuales) => ({ ...actuales, [requisitoId]: [...siguientes] }));
+    setGuardando((actuales) => ({ ...actuales, [requisitoId]: true }));
     try {
-      await actualizarLecturaBiblica(requisitoId, referencia, completado);
+      await actualizarLecturaBiblica(requisitoId, referencia, leida);
     } catch (fallo) {
-      setLecturasPorRequisito((actuales) => ({ ...actuales, [requisitoId]: anteriores }));
+      setLecturas((actuales) => ({ ...actuales, [requisitoId]: anteriores }));
       setErroresLectura((actuales) => ({
         ...actuales,
         [requisitoId]: fallo?.response?.data?.mensaje || 'No pudimos guardar esta lectura. Intentá de nuevo.'
       }));
     } finally {
-      setLecturasGuardando((actuales) => {
-        const siguientes = { ...actuales };
-        delete siguientes[requisitoId];
-        return siguientes;
+      setGuardando((actuales) => {
+        const resto = { ...actuales };
+        delete resto[requisitoId];
+        return resto;
       });
     }
   };
-  if (cargando) {
-    return <main className="booklet-state" role="status" aria-live="polite"><span className="profile-spinner" /><p>Abriendo tu cuadernillo...</p></main>;
-  }
 
-  if (error || !datos || !perfil) {
+  const listaRequisitos = (area) => {
+    const requisitos = area.requisitos || [];
+    if (requisitos.length === 0) {
+      return <p className="cd-empty-area">Esta área todavía no tiene requisitos cargados.</p>;
+    }
     return (
-      <main className="booklet-state booklet-state--error">
-        <ShieldCheck size={30} aria-hidden="true" />
-        <h1>No pudimos abrir tu cuadernillo</h1>
-        <p role="alert">{error || 'No encontramos los datos de tu cuenta.'}</p>
-        <button type="button" onClick={() => setIntento((actual) => actual + 1)}>
-          <RefreshCw size={16} aria-hidden="true" /> Intentar de nuevo
-        </button>
-      </main>
+      <ol className="cd-reqs">
+        {requisitos.map((requisito) => (
+          <Requisito
+            key={requisito.id}
+            requisito={requisito}
+            lecturas={lecturas[requisito.id] || []}
+            guardando={Boolean(guardando[requisito.id])}
+            error={erroresLectura[requisito.id]}
+            onLectura={marcarLectura}
+          />
+        ))}
+      </ol>
     );
-  }
-
-  if (!cuadernilloActivo) {
-    return (
-      <main className="booklet-state booklet-state--error">
-        <BookOpen size={30} aria-hidden="true" />
-        <h1>Tu clase todavía no tiene cuadernillos</h1>
-        <p>Cuando se cargue el material de {datos.clase?.nombre || 'tu clase'}, lo vas a encontrar acá.</p>
-      </main>
-    );
-  }
-
-  const clase = datos.clase || perfil.clase;
-  const colorClase = colorParaClase(clase);
-  const especialidades = Array.isArray(perfil.especialidades) ? perfil.especialidades.length : 0;
-  const requisitosActivos = Array.isArray(categoriaActiva?.requisitos) ? categoriaActiva.requisitos : [];
-  const aprobadosActivos = requisitosActivos.filter((requisito) => requisito.firmado || requisito.completado).length;
-  const tiposDisponibles = [...new Set(cuadernillos.map((item) => item.tipo))];
-  const nombreTipo = cuadernilloActivo.tipo === 'AVANZADA' ? 'Avanzada' : 'Regular';
-
-  const seleccionarConTeclado = (event, indice) => {
-    let siguiente = indice;
-    if (event.key === 'ArrowRight') siguiente = (indice + 1) % categorias.length;
-    else if (event.key === 'ArrowLeft') siguiente = (indice - 1 + categorias.length) % categorias.length;
-    else if (event.key === 'Home') siguiente = 0;
-    else if (event.key === 'End') siguiente = categorias.length - 1;
-    else return;
-
-    event.preventDefault();
-    setCategoriaSeleccionada(categorias[siguiente].id);
-    referenciasPestanas.current[siguiente]?.focus();
   };
 
+  if (cargando || error || !datos) {
+    return (
+      <AppShell perfil={perfil}>
+        <div className="cd cd--state" role={cargando ? 'status' : undefined}>
+          {cargando ? (
+            <>
+              <span className="cd-spinner" aria-hidden="true" />
+              <p>Abriendo tu cuadernillo...</p>
+            </>
+          ) : (
+            <>
+              <h1>No pudimos abrir tu cuadernillo</h1>
+              <p role="alert">{error || 'No encontramos los datos de tu cuenta.'}</p>
+              <button type="button" className="cd-button" onClick={() => setIntento((actual) => actual + 1)}>
+                <RefreshCw size={18} aria-hidden="true" />Intentar de nuevo
+              </button>
+            </>
+          )}
+        </div>
+      </AppShell>
+    );
+  }
+
+  const clase = datos.clase || perfil?.clase;
+  const tipos = [...new Set(cuadernillos.map((item) => item.tipo))];
+
   return (
-    <main className="profile-page booklet-page" style={{ '--class-color': colorClase }}>
-      <ProfileSidebar perfil={perfil} specialtyCount={especialidades} activePage="cuadernillo" />
-      <div className="profile-main">
-        <div className="profile-shell booklet-shell">
-          <header className="profile-topbar">
-            <span className="profile-topbar__status"><i aria-hidden="true" /> RUMBO DE AVENTURA · CLASE {clase?.nombre || 'SIN ASIGNAR'}</span>
-            <span className="profile-topbar__insignias"><Award size={16} aria-hidden="true" /> {resumen.aprobados} / {resumen.total} PUNTOS</span>
-          </header>
-
-          <section className="booklet-hero" aria-labelledby="booklet-title">
-            <div className="booklet-hero__copy">
-              <span className="booklet-eyebrow"><Compass size={14} /> TU MAPA DE AVENTURAS</span>
-              <h1 id="booklet-title">Mi cuadernillo de aventuras</h1>
-              <p>Elegí una sección, completá los desafíos y celebrá cada avance.</p>
-              <span className="booklet-class-chip"><Sparkles size={15} /> CLASE {clase?.nombre || 'SIN ASIGNAR'}</span>
-            </div>
-            <div className="booklet-progress">
-              <div className="booklet-progress__top">
-                <span className="booklet-progress__seal"><ClipboardList size={19} /></span>
-                <div><small>TU AVENTURA VA</small><strong>{resumen.porcentaje}%</strong></div>
-              </div>
-              <div className="booklet-progress__track" role="progressbar" aria-label="Porcentaje aprobado del cuadernillo" aria-valuemin="0" aria-valuemax="100" aria-valuenow={resumen.porcentaje}>
-                <span style={{ width: resumen.porcentaje + '%' }} />
-              </div>
-              <div className="booklet-progress__legend"><span>{resumen.aprobados} aprobados</span><span>{resumen.total} requisitos</span></div>
-            </div>
-            <svg className="booklet-hero__landscape" viewBox="0 0 1200 170" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-              <path d="M0 98 96 61l102 34 95-49 103 62 95-40 115 48 111-61 106 48 95-39 121 49 91-30 70 28v59H0Z" fill="#85977c" fillOpacity=".28" />
-              <path d="m0 130 119-38 96 28 110-36 111 43 96-34 126 37 111-41 117 36 100-29 113 33 101-21v62H0Z" fill="#071b1a" fillOpacity=".78" />
-              <g fill="#061816" fillOpacity=".83"><path d="m132 128 15-27 15 27h-7l13 20h-42l13-20Zm100 10 12-22 12 22h-6l10 17h-38l10-17Zm747-13 18-32 18 32h-9l16 25h-50l16-25Zm102 12 13-23 13 23h-6l11 18h-36l11-18Z" /></g>
-            </svg>
-          </section>
-
-          <section className="booklet-switch" aria-label="Tipo de cuadernillo">
-            <div><span className="booklet-eyebrow booklet-eyebrow--paper">ELEGÍ TU MISIÓN</span><strong>Elegí el recorrido</strong></div>
-            <div className="booklet-switch__buttons" role="group" aria-label="Seleccionar etapa">
-              {tiposDisponibles.map((tipo) => (
+    <AppShell perfil={perfil}>
+      <div className="cd" style={{ '--clase': colorDeClase(clase) }}>
+        <header className="cd-head">
+          <div>
+            <span className="cd-head__class"><BookOpen size={16} aria-hidden="true" />Clase {clase?.nombre || 'sin asignar'}</span>
+            <h1>Mi cuadernillo</h1>
+          </div>
+          {tipos.length > 1 && (
+            <div className="cd-switch" role="group" aria-label="Tipo de cuadernillo">
+              {tipos.map((opcion) => (
                 <button
-                  className={cuadernilloActivo.tipo === tipo ? 'is-active' : ''}
-                  key={tipo}
+                  key={opcion}
                   type="button"
-                  aria-pressed={cuadernilloActivo.tipo === tipo}
-                  onClick={() => setTipoSeleccionado(tipo)}
+                  className={libro?.tipo === opcion ? 'is-on' : ''}
+                  aria-pressed={libro?.tipo === opcion}
+                  onClick={() => cambiarTipo(opcion)}
                 >
-                  <BookOpen size={16} aria-hidden="true" /> {tipo === 'AVANZADA' ? 'Avanzada' : 'Regular'}
+                  {opcion === 'AVANZADA' ? 'Avanzada' : 'Regular'}
                 </button>
               ))}
             </div>
-          </section>
+          )}
+        </header>
 
-          {categorias.length === 0 ? (
-            <section className="booklet-empty" aria-live="polite">
-              <span><BookOpen size={22} /></span>
-              <h2>Todavía no hay misiones en esta etapa</h2>
-              <p>El cuadernillo {nombreTipo.toLowerCase()} de {clase?.nombre || 'tu clase'} todavía no tiene requisitos cargados.</p>
+        {!libro ? (
+          <div className="cd-empty">
+            <BookOpen size={24} aria-hidden="true" />
+            <p>Tu clase todavía no tiene cuadernillo cargado. Cuando la dirección lo suba, lo vas a ver acá.</p>
+          </div>
+        ) : (
+          <>
+            <section className="cd-summary" aria-label="Avance del cuadernillo">
+              <div className="cd-summary__top">
+                <strong>{porcentaje}%</strong>
+                <span>{resumen.firmados} de {resumen.total} requisitos firmados · {libro.tipo === 'AVANZADA' ? 'avanzada' : 'regular'}</span>
+              </div>
+              <div
+                className="cd-summary__bar"
+                role="progressbar"
+                aria-label="Avance del cuadernillo"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={porcentaje}
+              >
+                <span style={{ width: `${porcentaje}%` }} />
+              </div>
             </section>
-          ) : (
-            <section className="booklet-workspace" aria-label="Secciones del cuadernillo">
-              <div className="booklet-workspace__top">
-                <div><span className="booklet-eyebrow booklet-eyebrow--paper">TU RECORRIDO · {nombreTipo.toUpperCase()}</span><h2>Elegí una sección</h2></div>
-                <span className="booklet-category-total">{categorias.length} {categorias.length === 1 ? 'sección' : 'secciones'}</span>
+
+            {areas.length === 0 ? (
+              <div className="cd-empty">
+                <BookOpen size={24} aria-hidden="true" />
+                <p>Este cuadernillo todavía no tiene áreas cargadas.</p>
               </div>
-
-              <div className="booklet-tabs" role="tablist" aria-label="Secciones">
-                {categorias.map((categoria, indice) => {
-                  const requisitos = Array.isArray(categoria.requisitos) ? categoria.requisitos : [];
-                  const firmados = requisitos.filter((requisito) => requisito.firmado || requisito.completado).length;
-                  const activa = categoriaActiva?.id === categoria.id;
-                  return (
-                    <button
-                      className={activa ? 'booklet-tab is-active' : 'booklet-tab'}
-                      id={'booklet-tab-' + categoria.id}
-                      key={categoria.id}
-                      ref={(elemento) => { referenciasPestanas.current[indice] = elemento; }}
-                      type="button"
-                      role="tab"
-                      aria-selected={activa}
-                      aria-controls={'booklet-panel-' + categoria.id}
-                      tabIndex={activa ? 0 : -1}
-                      onClick={() => setCategoriaSeleccionada(categoria.id)}
-                      onKeyDown={(event) => seleccionarConTeclado(event, indice)}
-                    >
-                      <span className="booklet-tab__order">{String(categoria.orden).padStart(2, '0')}</span>
-                      <span className="booklet-tab__copy"><strong>{categoria.nombre}</strong><small>{firmados}/{requisitos.length} aprobados</small></span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {categoriaActiva && (
-                <section className="booklet-section" id={'booklet-panel-' + categoriaActiva.id} role="tabpanel" aria-labelledby={'booklet-tab-' + categoriaActiva.id} tabIndex="0">
-                  <header className="booklet-section__heading">
-                    <div><span className="booklet-eyebrow booklet-eyebrow--paper">TU DESAFÍO {String(categoriaActiva.orden).padStart(2, '0')}</span><h3>{categoriaActiva.nombre}</h3></div>
-                    <span className="booklet-section__score"><CheckCircle2 size={15} aria-hidden="true" /> {aprobadosActivos} de {requisitosActivos.length} firmados</span>
-                  </header>
-
-                  {requisitosActivos.length === 0 ? (
-                    <div className="booklet-empty booklet-empty--section"><ClipboardList size={23} /><p>Esta sección todavía no tiene puntos cargados.</p></div>
-                  ) : (
-                    <ol className="booklet-requirements">
-                      {requisitosActivos.map((requisito) => {
-                        const aprobado = Boolean(requisito.firmado || requisito.completado);
-                        const referenciasLectura = Array.isArray(requisito.referencias_lectura) ? requisito.referencias_lectura : [];
-                        const lecturasGuardadas = lecturasPorRequisito[requisito.id] || requisito.lecturas_completadas || [];
-                        const guardandoLecturas = Boolean(lecturasGuardando[requisito.id]);
-                        return (
-                          <li className={aprobado ? 'booklet-requirement is-approved' : 'booklet-requirement'} key={requisito.id}>
-                            <span className="booklet-requirement__number">{String(requisito.numero_item).padStart(2, '0')}</span>
-                            <div className="booklet-requirement__body">
-                              {referenciasLectura.length > 0 ? (
-                                <div className="booklet-reading">
-                                  <div className="booklet-reading__top">
-                                    <p>{requisito.descripcion.split(':')[0]}</p>
-                                    <span>{aprobado ? 'Lecturas verificadas' : lecturasGuardadas.length + ' de ' + referenciasLectura.length + ' leídos'}</span>
-                                  </div>
-                                  <div className="booklet-reading__grid" role="group" aria-label="Lecturas bíblicas del punto 3">
-                                    {referenciasLectura.map((referencia) => {
-                                      const marcada = aprobado || lecturasGuardadas.includes(referencia);
-                                      return (
-                                        <label className={marcada ? 'booklet-reading__item is-read' : 'booklet-reading__item'} key={referencia}>
-                                          <input
-                                            type="checkbox"
-                                            checked={marcada}
-                                            disabled={aprobado || guardandoLecturas}
-                                            aria-label={'Lectura ' + referencia}
-                                            onChange={(event) => actualizarLectura(requisito.id, referencia, event.target.checked)}
-                                          />
-                                          <span>{referencia}</span>
-                                        </label>
-                                      );
-                                    })}
-                                  </div>
-                                  {erroresLectura[requisito.id] && <p className="booklet-reading__error" role="alert">{erroresLectura[requisito.id]}</p>}
-                                </div>
-                              ) : (
-                                <p>{requisito.descripcion}</p>
-                              )}
-                              {aprobado && requisito.fecha_firma && <small><CalendarDays size={13} aria-hidden="true" /> Firmado el {fechaLegible(requisito.fecha_firma)}</small>}
-                            </div>
-                            <span className={aprobado ? 'booklet-status is-approved' : 'booklet-status'}>
-                              {aprobado ? <><CheckCircle2 size={15} aria-hidden="true" /> Aprobado</> : <><span className="booklet-status__dot" /> Pendiente</>}
+            ) : (
+              <div className="cd-layout">
+                <ul className="cd-areas">
+                  {areas.map((area) => {
+                    const { numeral, nombre } = separarNombre(area.nombre);
+                    const { firmados, total } = contar(area.requisitos);
+                    const abierta = area.id === areaActiva;
+                    const completa = total > 0 && firmados === total;
+                    return (
+                      <li key={area.id} className={abierta ? 'cd-area is-open' : 'cd-area'}>
+                        <button
+                          type="button"
+                          className="cd-area__btn"
+                          aria-expanded={abierta}
+                          onClick={() => {
+                            // En computadora siempre muestra el área elegida; en celular abre y cierra.
+                            const ancho = window.matchMedia('(min-width: 900px)').matches;
+                            setAreaAbierta(abierta && !ancho ? null : area.id);
+                          }}
+                        >
+                          <span className={completa ? 'cd-area__mark is-done' : 'cd-area__mark'} aria-hidden="true">
+                            {completa ? <Check size={16} strokeWidth={3} /> : numeral || area.orden}
+                          </span>
+                          <span className="cd-area__copy">
+                            <strong>{nombre}</strong>
+                            <span className="cd-area__bar" aria-hidden="true">
+                              <span style={{ width: total ? `${(firmados / total) * 100}%` : 0 }} />
                             </span>
-                          </li>
-                        );
-                      })}
-                    </ol>
+                          </span>
+                          <small>{firmados}/{total}</small>
+                          <ChevronDown size={18} className="cd-area__chev" aria-hidden="true" />
+                        </button>
+                        {abierta && <div className="cd-area__inline">{listaRequisitos(area)}</div>}
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <section className="cd-detail" aria-live="polite">
+                  {areaSeleccionada ? (
+                    <>
+                      <h2>{separarNombre(areaSeleccionada.nombre).nombre}</h2>
+                      <p className="cd-detail__count">
+                        {contar(areaSeleccionada.requisitos).firmados} de {contar(areaSeleccionada.requisitos).total} firmados
+                      </p>
+                      {listaRequisitos(areaSeleccionada)}
+                    </>
+                  ) : (
+                    <p className="cd-empty-area">Elegí un área para ver sus requisitos.</p>
                   )}
                 </section>
-              )}
-            </section>
-          )}
-
-        </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
-    </main>
+    </AppShell>
   );
 }

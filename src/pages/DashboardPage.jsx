@@ -16,11 +16,11 @@ export default function DashboardPage() {
           <p className="mt-1 text-sm text-slate-500">Bienvenido al sistema de gestión.</p>
         </div>
         <Link
-          to="/perfil"
+          to="/configuracion"
           className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d7c9a8] bg-[#fffdf5] px-4 text-sm font-semibold text-[#31523f] shadow-sm transition hover:border-[#9eaa8e] hover:bg-white"
         >
           <CircleUserRound size={17} aria-hidden="true" />
-          Mi perfil
+          Configuración
         </Link>
       </div>
     </main>

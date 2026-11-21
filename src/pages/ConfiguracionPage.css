@@ -1,0 +1,319 @@
+/* Configuración: tarjeta de la cuenta, datos editables y, al final, contraseña y cierre de sesión. */
+.cfg {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-block: 24px 32px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.cfg-title {
+  margin: 0 0 18px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.cfg-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--jc-salvia);
+}
+
+.cfg-profile__avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--jc-pino);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.cfg-profile__copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cfg-profile__copy strong {
+  font-size: 19px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cfg-profile__copy span {
+  font-size: 15px;
+  color: #3F4A44;
+}
+
+.cfg-profile__copy small {
+  font-size: 13px;
+  color: var(--jc-gris);
+}
+
+.cfg-note {
+  margin: 8px 4px 0;
+  font-size: 13px;
+  color: var(--jc-gris);
+}
+
+.cfg-group {
+  margin-top: 26px;
+}
+
+.cfg-group h2 {
+  margin: 0 0 10px 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--jc-gris);
+}
+
+.cfg-card {
+  border: 1px solid var(--jc-borde);
+  border-radius: 18px;
+  background: var(--jc-blanco);
+}
+
+.cfg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+}
+
+.cfg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cfg-field label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cfg-field input {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid #D6DCD7;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 16px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cfg-field input:focus {
+  outline: none;
+  border-color: var(--jc-pino);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--jc-pino) 14%, transparent);
+}
+
+.cfg-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: flex-start;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--jc-pino);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cfg-button:hover:not(:disabled) {
+  background: var(--jc-pino-oscuro);
+}
+
+.cfg-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.cfg-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #FBEAE5;
+  color: #8E3420;
+  font-size: 14px;
+}
+
+.cfg-ok {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--jc-pino);
+}
+
+.cfg-help {
+  margin: -4px 0 0;
+  font-size: 13px;
+  color: var(--jc-gris);
+}
+
+/* Lista de la cuenta */
+.cfg-list {
+  overflow: hidden;
+}
+
+.cfg-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--jc-borde);
+  background: transparent;
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cfg-row:last-child {
+  border-bottom: 0;
+}
+
+.cfg-row:hover:not(:disabled) {
+  background: var(--jc-fondo);
+}
+
+.cfg-row__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+}
+
+.cfg-row__label {
+  flex: 1;
+}
+
+.cfg-row__chev {
+  color: var(--jc-gris);
+  transition: transform 0.2s;
+}
+
+.cfg-row__chev.is-open {
+  transform: rotate(180deg);
+}
+
+.cfg-row--danger {
+  color: var(--jc-error);
+}
+
+.cfg-row--danger .cfg-row__icon {
+  background: #FBEAE5;
+  color: var(--jc-error);
+}
+
+.cfg-form--clave {
+  padding-top: 4px;
+  border-bottom: 1px solid var(--jc-borde);
+  background: #FCFCFA;
+}
+
+.cfg-show {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--jc-pino);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cfg-button:focus-visible,
+.cfg-row:focus-visible,
+.cfg-show:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--jc-pino) 40%, transparent);
+  outline-offset: 2px;
+}
+
+/* Carga y error */
+.cfg--state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 60vh;
+  text-align: center;
+  color: var(--jc-gris);
+}
+
+.cfg--state h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--jc-tinta);
+}
+
+.cfg--state .cfg-button {
+  align-self: center;
+}
+
+.cfg-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--jc-salvia);
+  border-top-color: var(--jc-pino);
+  border-radius: 50%;
+  animation: cfg-spin 0.8s linear infinite;
+}
+
+@keyframes cfg-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (min-width: 900px) {
+  .cfg {
+    margin: 0;
+    padding: 36px 40px 48px;
+  }
+
+  .cfg-title {
+    font-size: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cfg-spinner {
+    animation-duration: 2s;
+  }
+
+  .cfg-row__chev {
+    transition: none;
+  }
+}
