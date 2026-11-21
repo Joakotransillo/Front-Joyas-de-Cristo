@@ -1,0 +1,375 @@
+/* Ventana de evaluación: hoja completa en celular, ventana centrada en computadora. */
+.ev-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(15, 23, 20, 0.5);
+}
+
+.ev {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+  background: var(--jc-fondo);
+  color: var(--jc-tinta);
+  font-family: var(--jc-letra);
+  outline: none;
+}
+
+.ev-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 14px;
+  border-bottom: 1px solid var(--jc-borde);
+  background: var(--jc-blanco);
+}
+
+.ev-head small {
+  font-size: 13px;
+  color: var(--jc-gris);
+}
+
+.ev-head h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ev-head__class {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--jc-gris);
+}
+
+.ev-head__class i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--clase);
+}
+
+.ev-close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--jc-salvia);
+  color: var(--jc-tinta);
+  cursor: pointer;
+}
+
+.ev-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 24px;
+  overscroll-behavior: contain;
+}
+
+.ev-switch {
+  display: flex;
+  margin-bottom: 14px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--jc-salvia);
+}
+
+.ev-switch button {
+  flex: 1;
+  min-height: 38px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--jc-gris);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.ev-switch button.is-on {
+  background: var(--jc-blanco);
+  color: var(--jc-tinta);
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.ev-area + .ev-area {
+  margin-top: 18px;
+}
+
+.ev-area__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ev-area__head h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ev-area__head > span {
+  font-size: 13px;
+  color: var(--jc-gris);
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-all {
+  padding: 4px 10px;
+  border: 1px solid var(--jc-borde);
+  border-radius: 999px;
+  background: var(--jc-blanco);
+  color: var(--jc-pino);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ev-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ev-req {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1.5px solid var(--jc-borde);
+  border-radius: 14px;
+  background: var(--jc-blanco);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ev-req input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ev-req__box {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+  border: 2px solid #B9C2BC;
+  border-radius: 7px;
+  background: #fff;
+  color: #fff;
+}
+
+.ev-req.is-on {
+  border-color: var(--jc-pino);
+  background: var(--jc-salvia);
+}
+
+.ev-req.is-on .ev-req__box {
+  border-color: var(--jc-pino);
+  background: var(--jc-pino);
+}
+
+.ev-req.is-done {
+  cursor: default;
+  background: var(--jc-fondo);
+}
+
+.ev-req.is-done .ev-req__box {
+  border-color: #9AA59E;
+  background: #9AA59E;
+}
+
+.ev-req.is-done .ev-req__text > span {
+  color: var(--jc-gris);
+}
+
+.ev-req:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--jc-pino) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.ev-req__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.ev-req__text b {
+  font-weight: 600;
+}
+
+.ev-req__text small {
+  font-size: 13px;
+  color: var(--jc-gris);
+}
+
+.ev-req__signed {
+  font-weight: 500;
+}
+
+/* Pie fijo con la acción */
+.ev-foot {
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--jc-borde);
+  background: var(--jc-blanco);
+}
+
+.ev-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ev-count {
+  flex: 1;
+  font-size: 14px;
+  color: var(--jc-gris);
+}
+
+.ev-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--jc-pino);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ev-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ev-button--ghost {
+  border: 1.5px solid var(--jc-borde);
+  background: var(--jc-blanco);
+  color: var(--jc-tinta);
+}
+
+.ev-confirm p {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.ev-confirm p svg {
+  flex: none;
+  margin-top: 2px;
+  color: #B87A16;
+}
+
+.ev-confirm__list {
+  margin: 0 0 12px;
+  padding-left: 44px;
+  list-style: disc;
+  font-size: 14px;
+  color: var(--jc-gris);
+}
+
+.ev-error {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #FBEAE5;
+  color: #8E3420;
+  font-size: 14px;
+}
+
+.ev-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 10px;
+  text-align: center;
+  color: var(--jc-gris);
+}
+
+.ev-state p {
+  margin: 0;
+}
+
+.ev-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--jc-salvia);
+  border-top-color: var(--jc-pino);
+  border-radius: 50%;
+  animation: ev-spin 0.8s linear infinite;
+}
+
+@keyframes ev-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ev-close:focus-visible,
+.ev-all:focus-visible,
+.ev-button:focus-visible,
+.ev-switch button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--jc-pino) 40%, transparent);
+  outline-offset: 2px;
+}
+
+@media (min-width: 760px) {
+  .ev-fondo {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .ev {
+    width: min(720px, 100%);
+    height: auto;
+    max-height: min(88vh, 900px);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  }
+
+  .ev-head {
+    padding-top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ev-spinner {
+    animation-duration: 2s;
+  }
+}
