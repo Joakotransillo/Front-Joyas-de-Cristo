@@ -5,6 +5,7 @@ import ConfiguracionPage from '../pages/ConfiguracionPage';
 import EspecialidadesPage from '../pages/EspecialidadesPage';
 import EspecialidadDetallePage from '../pages/EspecialidadDetallePage';
 import MedalleroPage from '../pages/MedalleroPage';
+import UnidadPage from '../pages/UnidadPage';
 import DashboardPage from '../pages/DashboardPage';
 import CuadernilloPage from '../pages/CuadernilloPage';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -32,6 +33,11 @@ export default function AppRoutes() {
       {/* Cuadernillo privado para conquistadores. */}
       <Route element={<ProtectedRoute rolesPermitidos={['CONQUISTADOR']} />}>
         <Route path="/cuadernillo" element={<CuadernilloPage />} />
+      </Route>
+
+      {/* Panel de unidad y evaluación del sábado para consejeros. */}
+      <Route element={<ProtectedRoute rolesPermitidos={['CONSEJERO']} />}>
+        <Route path="/unidad" element={<UnidadPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
 

@@ -1,4 +1,4 @@
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, Navigate, useOutletContext } from 'react-router-dom';
 import { CircleUserRound } from 'lucide-react';
 import DashboardConquiPage from './DashboardConquiPage';
 
@@ -6,6 +6,10 @@ export default function DashboardPage() {
   const contexto = useOutletContext() || {};
   if (contexto.usuario?.rol === 'CONQUISTADOR') {
     return <DashboardConquiPage />;
+  }
+  // El inicio del consejero es el panel de su unidad.
+  if (contexto.usuario?.rol === 'CONSEJERO') {
+    return <Navigate to="/unidad" replace />;
   }
 
   return (

@@ -1,16 +1,17 @@
-import { Award, BookOpen, House, Medal, Settings } from 'lucide-react';
+import { Award, BookOpen, House, Medal, Settings, Users } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import brandLogo from '../assets/joyas-de-cristo-logo-256.png';
 import { temaParaPerfil } from '../styles/temaClase';
 import './AppShell.css';
 
-// Secciones del menú. `soloConquistador` oculta las que otros roles no pueden abrir.
+// Secciones del menú. `roles` limita quién las ve; sin `roles`, las ven todos.
 // Biblioteca se suma cuando exista su pantalla.
 const SECCIONES = [
-  { to: '/dashboard', etiqueta: 'Inicio', Icono: House },
-  { to: '/cuadernillo', etiqueta: 'Cuadernillo', Icono: BookOpen, soloConquistador: true },
+  { to: '/dashboard', etiqueta: 'Inicio', Icono: House, roles: ['CONQUISTADOR', 'DIRECTOR', 'SECRETARIA'] },
+  { to: '/unidad', etiqueta: 'Mi unidad', Icono: Users, roles: ['CONSEJERO'] },
+  { to: '/cuadernillo', etiqueta: 'Cuadernillo', Icono: BookOpen, roles: ['CONQUISTADOR'] },
   { to: '/especialidades', etiqueta: 'Especialidades', Icono: Medal },
-  { to: '/medallero', etiqueta: 'Medallero', Icono: Award, soloConquistador: true }
+  { to: '/medallero', etiqueta: 'Medallero', Icono: Award, roles: ['CONQUISTADOR'] }
 ];
 // En la barra del celular se usa la etiqueta corta para que entren las cinco secciones.
 const CONFIGURACION = { to: '/configuracion', etiqueta: 'Configuración', corta: 'Ajustes', Icono: Settings };
@@ -26,7 +27,9 @@ export function iniciales(nombre = '') {
  */
 export default function AppShell({ perfil, children }) {
   const nombre = perfil?.nombre_completo || '';
-  const secciones = SECCIONES.filter((seccion) => !seccion.soloConquistador || !perfil || perfil.rol === 'CONQUISTADOR');
+  // Mientras carga el perfil se muestra el menú del conquistador, que es el uso más común.
+  const rol = perfil?.rol || 'CONQUISTADOR';
+  const secciones = SECCIONES.filter((seccion) => !seccion.roles || seccion.roles.includes(rol));
 
   return (
     <div className="shell" style={temaParaPerfil(perfil)}>
