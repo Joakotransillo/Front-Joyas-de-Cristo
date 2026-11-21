@@ -6,6 +6,7 @@ import EspecialidadesPage from '../pages/EspecialidadesPage';
 import EspecialidadDetallePage from '../pages/EspecialidadDetallePage';
 import MedalleroPage from '../pages/MedalleroPage';
 import UnidadPage from '../pages/UnidadPage';
+import SolicitudesPage from '../pages/SolicitudesPage';
 import DashboardPage from '../pages/DashboardPage';
 import CuadernilloPage from '../pages/CuadernilloPage';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -38,6 +39,11 @@ export default function AppRoutes() {
       {/* Panel de unidad y evaluación del sábado para consejeros. */}
       <Route element={<ProtectedRoute rolesPermitidos={['CONSEJERO']} />}>
         <Route path="/unidad" element={<UnidadPage />} />
+      </Route>
+
+      {/* Bandeja de solicitudes de registro para dirección y secretaría. */}
+      <Route element={<ProtectedRoute rolesPermitidos={['DIRECTOR', 'SECRETARIA']} />}>
+        <Route path="/solicitudes" element={<SolicitudesPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
