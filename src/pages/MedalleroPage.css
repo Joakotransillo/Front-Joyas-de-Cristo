@@ -1,0 +1,58 @@
+/* Medallero: medallas por logros (próximamente) y parches de especialidades ganados. */
+.med-section {
+  margin-top: 26px;
+}
+
+.med-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.med-section h2 small {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.med-soon {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--jc-arena);
+}
+
+.med-soon__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--jc-blanco);
+  color: var(--jc-fogata);
+}
+
+.med-soon strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.med-soon p {
+  margin: 2px 0 0;
+  font-size: 15px;
+  color: var(--jc-arena-tinta);
+}
+
+.med .esp-empty a {
+  color: var(--jc-pino);
+  font-weight: 500;
+}

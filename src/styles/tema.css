@@ -1,0 +1,22 @@
+/* Tema de la app Joyas de Cristo: colores y letra compartidos por todas las pantallas nuevas. */
+:root {
+  --jc-pino: #1F5A43;
+  --jc-pino-oscuro: #17463A;
+  --jc-menu: #1F5A43;
+  --jc-clase: #1F5A43;
+  --jc-salvia: #E3ECE5;
+  --jc-salvia-fuerte: #C2D4C7;
+  --jc-arena: #F3EFE4;
+  --jc-arena-tinta: #6B6455;
+  --jc-fogata: #D9792B;
+  --jc-tinta: #1C2420;
+  --jc-gris: #5E6963;
+  --jc-borde: #E1E5E0;
+  --jc-fondo: #FAFAF7;
+  --jc-blanco: #FFFFFF;
+  --jc-error: #B4472F;
+
+  --jc-letra: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --jc-radio: 16px;
+  --jc-radio-chico: 12px;
+}

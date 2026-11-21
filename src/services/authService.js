@@ -34,3 +34,17 @@ export async function cambiarContrasena(datosPassword) {
   const { data } = await api.patch('/auth/me', datosPassword);
   return data;
 }
+// Cierra la sesión en el servidor y borra los datos guardados en este equipo.
+// Aunque el servidor no responda, la sesión local se limpia igual.
+export async function cerrarSesion() {
+  try {
+    await api.delete('/auth/sesiones');
+  } finally {
+    try {
+      window.localStorage.removeItem(TOKEN_KEY);
+      window.localStorage.removeItem(USER_KEY);
+    } catch {
+      // Si el navegador bloquea el almacenamiento, no hay nada que borrar.
+    }
+  }
+}

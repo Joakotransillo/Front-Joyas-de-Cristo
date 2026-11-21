@@ -19,7 +19,7 @@ const CLASES = [
   { id: 1, nombre: 'Amigo', color: '#1E40AF', edad: 10 },
   { id: 2, nombre: 'Compañero', color: '#DC2626', edad: 11 },
   { id: 3, nombre: 'Explorador', color: '#166534', edad: 12 },
-  { id: 4, nombre: 'Pionero', color: '#65A30D', edad: 13 },
+  { id: 4, nombre: 'Pionero', color: '#6B7280', edad: 13 },
   { id: 5, nombre: 'Excursionista', color: '#7C3AED', edad: 14 },
   { id: 6, nombre: 'Guía', color: '#CA8A04', edad: 15 }
 ];

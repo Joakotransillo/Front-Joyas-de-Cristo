@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import './CampScene.css';
 
-const PALETAS = {
+export const PALETAS = {
   dia: {
     cieloArriba: '#BFDDEA',
     cieloAbajo: '#F6EEDB',
@@ -47,19 +47,45 @@ function Pino({ x, y, ancho }) {
   );
 }
 
+// Montañas y suelo. En la versión panorámica se estiran a lo ancho (sin unión en el medio).
+function Terreno({ p, momento }) {
+  return (
+    <>
+      <path d="M0 380L110 270l70 50 120-130 120 140 70-50 110 70v250H0z" fill={p.montanaLejos} />
+      {momento === 'dia' && <path d="M300 190l22 28-12-4-10 14-10-15-12 5z" fill="#F7F3EA" />}
+      <path d="M0 450l130-80 100 50 130-90 120 80 120-30v220H0z" fill={p.montanaMedia} />
+      <path d="M0 600v-95c110-25 220-13 320-23s200-12 280 10v108z" fill={p.suelo} />
+    </>
+  );
+}
+
+// Pinos a los costados. Los pinos no se estiran: en la panorámica se suman más.
+const PINOS = [[14, 420, 46], [56, 450, 34], [96, 470, 26], [520, 410, 50], [488, 452, 32], [566, 460, 30]];
+const PINOS_PANORAMICA = [
+  [14, 420, 46], [56, 450, 34], [96, 470, 26],
+  [470, 438, 38], [512, 452, 30],
+  [1040, 410, 50], [1008, 452, 32], [1130, 430, 44], [1166, 460, 30]
+];
+
 /**
  * Paisaje de campamento que cambia de cielo según el momento del día.
+ * `conCielo={false}` deja el cielo transparente (sin sol, luna ni estrellas) para usarlo sobre un fondo propio.
+ * `panoramica` lo dibuja el doble de ancho, para encabezados anchos.
+ * `carpa` ({ frente, sombra }) cambia el color de la carpa; por defecto es naranja.
  * Es decorativo: los lectores de pantalla lo ignoran.
  */
-export default function CampScene({ momento = 'dia', className = '' }) {
+export default function CampScene({ momento = 'dia', className = '', conCielo = true, panoramica = false, carpa }) {
   const id = useId().replace(/:/g, '');
   const p = PALETAS[momento] || PALETAS.dia;
   const esNoche = momento === 'noche';
+  const ancho = panoramica ? 1200 : 600;
+  // En la panorámica el campamento se corre a la derecha para dejar lugar al texto.
+  const corrimiento = panoramica ? 'translate(560 0)' : undefined;
 
   return (
     <svg
       className={`camp-scene camp-scene--${momento} ${className}`}
-      viewBox="0 0 600 600"
+      viewBox={`0 0 ${ancho} 600`}
       preserveAspectRatio="xMidYMax slice"
       aria-hidden="true"
       focusable="false"
@@ -79,9 +105,9 @@ export default function CampScene({ momento = 'dia', className = '' }) {
         </mask>
       </defs>
 
-      <rect width="600" height="600" fill={`url(#cielo-${id})`} />
+      {conCielo && <rect width={ancho} height="600" fill={`url(#cielo-${id})`} />}
 
-      {momento === 'dia' && (
+      {conCielo && momento === 'dia' && (
         <g>
           <circle cx="470" cy="250" r="44" fill="#F5C063" />
           <g fill="#FFFFFF" opacity=".85">
@@ -96,7 +122,7 @@ export default function CampScene({ momento = 'dia', className = '' }) {
         </g>
       )}
 
-      {momento === 'atardecer' && (
+      {conCielo && momento === 'atardecer' && (
         <g>
           <circle cx="450" cy="292" r="68" fill="#F4B860" opacity=".5" />
           <circle cx="450" cy="292" r="50" fill="#EE8E44" />
@@ -108,55 +134,51 @@ export default function CampScene({ momento = 'dia', className = '' }) {
         </g>
       )}
 
-      {esNoche && (
+      {conCielo && esNoche && (
         <g>
           <g fill="#FFFFFF" className="camp-scene__stars">
             {ESTRELLAS.map(([cx, cy, r], indice) => (
               <circle key={indice} cx={cx} cy={cy} r={r} style={{ animationDelay: `${(indice % 5) * 0.7}s` }} />
             ))}
           </g>
-          <path d="M360 118l80-26"stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity=".5" />
+          <path d="M360 118l80-26" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity=".5" />
           <circle cx="470" cy="236" r="32" fill="#F3E2B5" mask={`url(#luna-${id})`} />
         </g>
       )}
 
-      <path d="M0 380L110 270l70 50 120-130 120 140 70-50 110 70v250H0z" fill={p.montanaLejos} />
-      {momento === 'dia' && <path d="M300 190l22 28-12-4-10 14-10-15-12 5z" fill="#F7F3EA" />}
-      <path d="M0 450l130-80 100 50 130-90 120 80 120-30v220H0z" fill={p.montanaMedia} />
-
-      <circle cx="216" cy="515" r="120" fill={`url(#brillo-${id})`} />
-
-      <path d="M0 600v-95c110-25 220-13 320-23s200-12 280 10v108z" fill={p.suelo} />
-
+      <g transform={panoramica ? 'scale(2 1)' : undefined}>
+        <Terreno p={p} momento={momento} />
+      </g>
       <g fill={p.pinos}>
-        <Pino x={14} y={420} ancho={46} />
-        <Pino x={56} y={450} ancho={34} />
-        <Pino x={96} y={470} ancho={26} />
-        <Pino x={520} y={410} ancho={50} />
-        <Pino x={488} y={452} ancho={32} />
-        <Pino x={566} y={460} ancho={30} />
+        {(panoramica ? PINOS_PANORAMICA : PINOS).map(([x, y, ancho]) => (
+          <Pino key={`${x}-${y}`} x={x} y={y} ancho={ancho} />
+        ))}
       </g>
 
-      <g transform="translate(372 470)">
-        <path d="M50 2l48 64H2z" fill="#D9792B" />
-        <path d="M50 2l48 64H74z" fill="#B85F1C" />
-        <path d="M50 22l15 44H35z" fill={p.puerta} />
-        <path d="M50 2v64" stroke="#7A3E14" strokeWidth="1.5" />
-      </g>
+      <g transform={corrimiento}>
+        <circle cx="216" cy="515" r="120" fill={`url(#brillo-${id})`} />
 
-      <g transform="translate(194 494)" className="camp-scene__fire">
-        <path d="M4 40l40-9M4 31l40 9" stroke="#6B4423" strokeWidth="5" strokeLinecap="round" />
-        <path className="camp-scene__flame" d="M24 0c4 8 13 12 13 22a13 13 0 0 1-26 0c0-7 4-10 6-15 3 4 4 7 4 7s0-8 3-14z" fill="#F2A33A" />
-        <path className="camp-scene__flame camp-scene__flame--inner" d="M24 16c3 4 6 7 6 11a6 6 0 0 1-12 0c0-3 3-6 6-11z" fill="#FCE3A1" />
-      </g>
-
-      {esNoche && (
-        <g fill="#F7B955">
-          <circle cx="210" cy="482" r="1.8" />
-          <circle cx="220" cy="468" r="1.3" />
-          <circle cx="206" cy="456" r="1.1" />
+        <g transform="translate(372 470)">
+          <path d="M50 2l48 64H2z" fill={carpa?.frente || '#D9792B'} />
+          <path d="M50 2l48 64H74z" fill={carpa?.sombra || '#B85F1C'} />
+          <path d="M50 22l15 44H35z" fill={p.puerta} />
+          <path d="M50 2v64" stroke="#7A3E14" strokeWidth="1.5" />
         </g>
-      )}
+
+        <g transform="translate(194 494)" className="camp-scene__fire">
+          <path d="M4 40l40-9M4 31l40 9" stroke="#6B4423" strokeWidth="5" strokeLinecap="round" />
+          <path className="camp-scene__flame" d="M24 0c4 8 13 12 13 22a13 13 0 0 1-26 0c0-7 4-10 6-15 3 4 4 7 4 7s0-8 3-14z" fill="#F2A33A" />
+          <path className="camp-scene__flame camp-scene__flame--inner" d="M24 16c3 4 6 7 6 11a6 6 0 0 1-12 0c0-3 3-6 6-11z" fill="#FCE3A1" />
+        </g>
+
+        {esNoche && (
+          <g fill="#F7B955">
+            <circle cx="210" cy="482" r="1.8" />
+            <circle cx="220" cy="468" r="1.3" />
+            <circle cx="206" cy="456" r="1.1" />
+          </g>
+        )}
+      </g>
     </svg>
   );
 }
