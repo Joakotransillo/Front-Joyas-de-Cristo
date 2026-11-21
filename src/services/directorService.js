@@ -29,3 +29,19 @@ export async function rechazarSolicitud(id) {
   });
   return data;
 }
+
+export async function obtenerMetricas() {
+  const { data } = await api.get('/director/metricas');
+  return data;
+}
+
+export async function obtenerUsuarios() {
+  const { data } = await api.get('/director/usuarios');
+  return Array.isArray(data?.usuarios) ? data.usuarios : [];
+}
+
+/** cambios: { rol?, unidad_id?, clase_id?, estado? }. Devuelve el usuario actualizado. */
+export async function editarUsuario(id, cambios) {
+  const { data } = await api.patch('/director/usuarios/' + encodeURIComponent(id), cambios);
+  return data.usuario;
+}

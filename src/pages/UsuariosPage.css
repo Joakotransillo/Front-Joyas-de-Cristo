@@ -1,0 +1,474 @@
+/* Gestión de usuarios: buscador, filtros por rol y una fila por persona con edición en el lugar. */
+.us {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-block: 24px 32px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.us-head__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.us-head h1 {
+  margin: 8px 0 2px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.us-head p {
+  margin: 0;
+  color: var(--jc-gris);
+}
+
+.us-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 18px;
+}
+
+.us-search {
+  display: flex;
+  flex: 1 1 260px;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 8px 0 14px;
+  border: 1.5px solid var(--jc-borde);
+  border-radius: 14px;
+  background: var(--jc-blanco);
+  color: var(--jc-gris);
+}
+
+.us-search:focus-within {
+  border-color: var(--jc-pino);
+}
+
+.us-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 16px;
+}
+
+.us-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.us-search button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--jc-gris);
+  cursor: pointer;
+}
+
+.us-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.us-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--jc-pino);
+}
+
+.us-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.us-roles button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1.5px solid var(--jc-borde);
+  border-radius: 999px;
+  background: var(--jc-blanco);
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.us-roles button small {
+  margin-left: 2px;
+  color: var(--jc-gris);
+  font-variant-numeric: tabular-nums;
+}
+
+.us-roles button.is-on {
+  border-color: var(--jc-pino);
+  background: var(--jc-pino);
+  color: #fff;
+}
+
+.us-roles button.is-on small {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.us-aviso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+  font-weight: 500;
+}
+
+.us-aviso button {
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.us-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.us-row {
+  border: 1px solid var(--jc-borde);
+  border-radius: 16px;
+  background: var(--jc-blanco);
+}
+
+.us-row.is-off {
+  background: var(--jc-fondo);
+}
+
+.us-row__main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "avatar who edit" "tags tags tags";
+  gap: 8px 12px;
+  align-items: center;
+  padding: 12px 14px;
+}
+
+.us-avatar {
+  grid-area: avatar;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--clase);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.us-row.is-off .us-avatar {
+  opacity: 0.4;
+}
+
+.us-row__who {
+  grid-area: who;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.us-row__who strong {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.us-row__who strong small {
+  font-weight: 400;
+  color: var(--jc-gris);
+}
+
+.us-row__who span {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--jc-gris);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.us-row__tags {
+  grid-area: tags;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.us-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--jc-fondo);
+  border: 1px solid var(--jc-borde);
+  font-size: 13px;
+}
+
+.us-tag i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.us-tag--director {
+  border-color: transparent;
+  background: var(--jc-pino);
+  color: #fff;
+}
+
+.us-tag--secretaria,
+.us-tag--consejero {
+  border-color: transparent;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+}
+
+.us-tag--off {
+  border-color: transparent;
+  background: #FBEAE5;
+  color: #8E3420;
+}
+
+.us-icon {
+  grid-area: edit;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--jc-fondo);
+  color: var(--jc-tinta);
+  cursor: pointer;
+}
+
+.us-icon:hover {
+  background: var(--jc-salvia);
+}
+
+/* Edición en el lugar */
+.us-edit {
+  display: grid;
+  gap: 12px;
+  margin: 0 14px 14px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--jc-fondo);
+}
+
+.us-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.us-field label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.us-field select {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1.5px solid #D6DCD7;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 16px;
+}
+
+.us-field select:disabled {
+  background: var(--jc-fondo);
+  color: var(--jc-gris);
+}
+
+.us-note,
+.us-warn {
+  margin: 0;
+  font-size: 14px;
+}
+
+.us-note {
+  color: var(--jc-gris);
+}
+
+.us-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #FBEAE5;
+  color: #8E3420;
+  font-size: 14px;
+}
+
+.us-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.us-actions__spacer {
+  flex: 1;
+}
+
+.us-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--jc-pino);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.us-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.us-btn--ghost {
+  border: 1.5px solid var(--jc-borde);
+  background: var(--jc-blanco);
+  color: var(--jc-tinta);
+}
+
+.us-btn--danger {
+  color: var(--jc-error);
+}
+
+.us-btn--danger-fill {
+  background: var(--jc-error);
+}
+
+.us-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 10px;
+  text-align: center;
+  color: var(--jc-gris);
+}
+
+.us-state p {
+  margin: 0;
+}
+
+.us-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--jc-salvia);
+  border-top-color: var(--jc-pino);
+  border-radius: 50%;
+  animation: us-spin 0.8s linear infinite;
+}
+
+@keyframes us-spin {
+  to { transform: rotate(360deg); }
+}
+
+.us-roles button:focus-visible,
+.us-icon:focus-visible,
+.us-btn:focus-visible,
+.us-search button:focus-visible,
+.us-aviso button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--jc-pino) 40%, transparent);
+  outline-offset: 2px;
+}
+
+@media (min-width: 900px) {
+  .us {
+    padding: 36px 40px 48px;
+  }
+
+  .us-head h1 {
+    font-size: 34px;
+  }
+
+  .us-row__main {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "avatar who tags edit";
+  }
+
+  .us-row__tags {
+    justify-content: flex-end;
+  }
+
+  .us-edit {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .us-edit .us-note,
+  .us-edit .us-warn,
+  .us-edit .us-error,
+  .us-edit .us-actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .us-spinner {
+    animation-duration: 2s;
+  }
+}

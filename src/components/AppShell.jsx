@@ -1,4 +1,4 @@
-import { Award, BookOpen, ClipboardList, House, Inbox, Medal, Settings, Users } from 'lucide-react';
+import { Award, BookOpen, ClipboardList, House, Inbox, Medal, Settings, UserCog, Users } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import brandLogo from '../assets/joyas-de-cristo-logo-256.png';
 import { temaParaPerfil } from '../styles/temaClase';
@@ -11,8 +11,10 @@ const SECCIONES = [
   { to: '/unidad', etiqueta: 'Mi unidad', Icono: Users, roles: ['CONSEJERO'] },
   { to: '/solicitudes', etiqueta: 'Solicitudes', Icono: Inbox, roles: ['DIRECTOR', 'SECRETARIA'] },
   { to: '/asistencia', etiqueta: 'Asistencia', Icono: ClipboardList, roles: ['CONSEJERO', 'SECRETARIA', 'DIRECTOR'] },
+  { to: '/usuarios', etiqueta: 'Usuarios', Icono: UserCog, roles: ['DIRECTOR', 'SECRETARIA'] },
   { to: '/cuadernillo', etiqueta: 'Cuadernillo', Icono: BookOpen, roles: ['CONQUISTADOR'] },
-  { to: '/especialidades', etiqueta: 'Especialidades', Icono: Medal },
+  // En la barra del celular solo para quienes la usan a diario (entran hasta 5 secciones).
+  { to: '/especialidades', etiqueta: 'Especialidades', Icono: Medal, barra: ['CONQUISTADOR', 'CONSEJERO'] },
   { to: '/medallero', etiqueta: 'Medallero', Icono: Award, roles: ['CONQUISTADOR'] }
 ];
 // En la barra del celular se usa la etiqueta corta para que entren las cinco secciones.
@@ -66,7 +68,7 @@ export default function AppShell({ perfil, children }) {
       <div className="shell-main">{children}</div>
 
       <nav className="shell-tabs" aria-label="Secciones">
-        {[...secciones, CONFIGURACION].map(({ to, etiqueta, corta, Icono }) => (
+        {[...secciones.filter((seccion) => !seccion.barra || seccion.barra.includes(rol)), CONFIGURACION].map(({ to, etiqueta, corta, Icono }) => (
           <NavLink key={to} to={to} className="shell-tabs__link" aria-label={etiqueta}>
             <Icono size={22} aria-hidden="true" />
             <span aria-hidden="true">{corta || etiqueta}</span>
