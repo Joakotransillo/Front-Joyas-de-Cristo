@@ -37,11 +37,12 @@ export function calcularMomento(fecha = new Date(), ubicacion = UBICACION_CLUB) 
 
 /**
  * El saludo acompaña al cielo: cuando en el paisaje se hace de noche, dice "Buenas noches".
- * Desde las 5 de la mañana dice "Buen día" aunque todavía esté oscuro (en invierno amanece tarde).
+ * Desde las 5 de la mañana dice "Buen día" aunque todavía esté oscuro (en invierno amanece tarde),
+ * y lo sigue diciendo hasta las 13, como se acostumbra antes del almuerzo.
  */
 export function calcularSaludo(momento, fecha = new Date()) {
   const hora = fecha.getHours();
-  if (hora >= 5 && hora < 12) return '¡Buen día!';
+  if (hora >= 5 && hora < 13) return '¡Buen día!';
   if (momento === 'noche') return '¡Buenas noches!';
   return '¡Buenas tardes!';
 }

@@ -29,3 +29,8 @@ export async function rechazarSolicitud(id) {
   });
   return data;
 }
+
+export async function obtenerMetricas() {
+  const { data } = await api.get('/director/metricas');
+  return data;
+}
