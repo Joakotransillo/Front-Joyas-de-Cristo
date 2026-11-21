@@ -1,4 +1,4 @@
-import { Award, BookOpen, House, Inbox, Medal, Settings, Users } from 'lucide-react';
+import { Award, BookOpen, ClipboardList, House, Inbox, Medal, Settings, Users } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import brandLogo from '../assets/joyas-de-cristo-logo-256.png';
 import { temaParaPerfil } from '../styles/temaClase';
@@ -10,6 +10,7 @@ const SECCIONES = [
   { to: '/dashboard', etiqueta: 'Inicio', Icono: House, roles: ['CONQUISTADOR', 'DIRECTOR', 'SECRETARIA'] },
   { to: '/unidad', etiqueta: 'Mi unidad', Icono: Users, roles: ['CONSEJERO'] },
   { to: '/solicitudes', etiqueta: 'Solicitudes', Icono: Inbox, roles: ['DIRECTOR', 'SECRETARIA'] },
+  { to: '/asistencia', etiqueta: 'Asistencia', Icono: ClipboardList, roles: ['CONSEJERO', 'SECRETARIA', 'DIRECTOR'] },
   { to: '/cuadernillo', etiqueta: 'Cuadernillo', Icono: BookOpen, roles: ['CONQUISTADOR'] },
   { to: '/especialidades', etiqueta: 'Especialidades', Icono: Medal },
   { to: '/medallero', etiqueta: 'Medallero', Icono: Award, roles: ['CONQUISTADOR'] }
