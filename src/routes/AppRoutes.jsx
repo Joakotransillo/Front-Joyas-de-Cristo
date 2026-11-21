@@ -7,6 +7,7 @@ import EspecialidadDetallePage from '../pages/EspecialidadDetallePage';
 import MedalleroPage from '../pages/MedalleroPage';
 import UnidadPage from '../pages/UnidadPage';
 import SolicitudesPage from '../pages/SolicitudesPage';
+import UsuariosPage from '../pages/UsuariosPage';
 import AsistenciaPage from '../pages/AsistenciaPage';
 import DashboardPage from '../pages/DashboardPage';
 import CuadernilloPage from '../pages/CuadernilloPage';
@@ -45,6 +46,7 @@ export default function AppRoutes() {
       {/* Bandeja de solicitudes de registro para dirección y secretaría. */}
       <Route element={<ProtectedRoute rolesPermitidos={['DIRECTOR', 'SECRETARIA']} />}>
         <Route path="/solicitudes" element={<SolicitudesPage />} />
+        <Route path="/usuarios" element={<UsuariosPage />} />
       </Route>
 
       {/* Asistencia del sábado: consejeros (su unidad), secretaría y dirección. */}
