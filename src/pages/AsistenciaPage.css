@@ -1,0 +1,409 @@
+/* Planilla de asistencia del sábado: un renglón por chico con presente y sus cuatro marcas. */
+.as {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-block: 24px 32px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.as-head__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.as-head h1 {
+  margin: 8px 0 12px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.as-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.as-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1.5px solid var(--jc-borde);
+  border-radius: 12px;
+  background: var(--jc-blanco);
+  color: var(--jc-gris);
+}
+
+.as-date input {
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 16px;
+}
+
+.as-date:focus-within {
+  border-color: var(--jc-pino);
+}
+
+.as-date__text {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.as-units {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.as-units button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1.5px solid var(--jc-borde);
+  border-radius: 999px;
+  background: var(--jc-blanco);
+  color: var(--jc-tinta);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.as-units button.is-on {
+  border-color: var(--jc-pino);
+  background: var(--jc-pino);
+  color: #fff;
+}
+
+/* Resumen */
+.as-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--jc-arena);
+}
+
+.as-status {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #FBEFD9;
+  color: #8A5A12;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.as-status.is-saved {
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+}
+
+.as-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 14px;
+  color: var(--jc-arena-tinta);
+}
+
+.as-totals strong {
+  color: var(--jc-tinta);
+  font-variant-numeric: tabular-nums;
+}
+
+.as-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--jc-pino);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.as-aviso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+  font-weight: 500;
+}
+
+/* Renglones */
+.as-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.as-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--jc-borde);
+  border-radius: 16px;
+  background: var(--jc-blanco);
+}
+
+.as-row.is-in {
+  border-color: color-mix(in srgb, var(--jc-pino) 35%, var(--jc-borde));
+}
+
+.as-row__who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.as-row__who div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.as-row__who strong {
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.as-row__who div span {
+  font-size: 13px;
+  color: var(--jc-gris);
+}
+
+.as-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--clase);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.as-row:not(.is-in) .as-avatar {
+  opacity: 0.45;
+}
+
+.as-row__marks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.as-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 52px;
+  padding: 4px;
+  border: 1.5px solid var(--jc-borde);
+  border-radius: 12px;
+  background: var(--jc-fondo);
+  color: var(--jc-gris);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.as-toggle.is-on {
+  border-color: var(--jc-pino);
+  background: var(--jc-salvia);
+  color: var(--jc-pino);
+  font-weight: 600;
+}
+
+.as-toggle--main {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  gap: 6px;
+  min-height: 46px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.as-toggle--main.is-on {
+  background: var(--jc-pino);
+  color: #fff;
+}
+
+/* Pie fijo: queda arriba de la barra del celular */
+.as-foot {
+  position: sticky;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--jc-borde);
+  border-radius: 16px;
+  background: var(--jc-blanco);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.as-foot__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.as-foot__row span {
+  font-size: 14px;
+  color: var(--jc-gris);
+}
+
+.as-error {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #FBEAE5;
+  color: #8E3420;
+  font-size: 14px;
+}
+
+.as-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: none;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--jc-pino);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.as-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.as-state,
+.as-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 10px;
+  text-align: center;
+  color: var(--jc-gris);
+}
+
+.as-state p,
+.as-empty p {
+  margin: 0;
+}
+
+.as-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--jc-salvia);
+  border-top-color: var(--jc-pino);
+  border-radius: 50%;
+  animation: as-spin 0.8s linear infinite;
+}
+
+@keyframes as-spin {
+  to { transform: rotate(360deg); }
+}
+
+.as-toggle:focus-visible,
+.as-units button:focus-visible,
+.as-link:focus-visible,
+.as-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--jc-pino) 40%, transparent);
+  outline-offset: 2px;
+}
+
+/* Computadora: cada chico en un renglón, con las marcas en columnas */
+@media (min-width: 900px) {
+  .as {
+    padding: 36px 40px 48px;
+  }
+
+  .as-head h1 {
+    font-size: 34px;
+  }
+
+  .as-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 10px 14px;
+  }
+
+  .as-row__marks {
+    grid-template-columns: 130px repeat(4, 92px);
+  }
+
+  .as-toggle--main {
+    grid-column: auto;
+  }
+
+  .as-toggle {
+    min-height: 46px;
+  }
+
+  .as-foot {
+    bottom: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .as-spinner {
+    animation-duration: 2s;
+  }
+}
